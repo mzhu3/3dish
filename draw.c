@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "ml6.h"
 #include "display.h"
 #include "draw.h"
@@ -53,17 +52,9 @@ void add_box( struct matrix * edges,
 void add_sphere( struct matrix * edges, 
 		 double cx, double cy, double cz,
 		 double r, double step ) {
-  double x,y,z;
-  double a = 0.0;
-  double b = 0.0;
-  for(a; a < M_PI;a+=step){
-    for(b;b<2*M_PI;b+=step){
-      x = r*cos(A)+cx;
-      y = r*sin(A)*cos(B)+cy;
-      z = r*sin(A)*cos(B)+cz;
-      add_points(edges,x,y,z);
-    }
-  }
+  edges = generate_sphere(cx,cy,cz,r,step);
+  
+  
 }
 
 /*======== void generate_sphere() ==========
@@ -77,13 +68,21 @@ void add_sphere( struct matrix * edges,
            of a sphere with center (cx, cy, cz) and
 	   radius r.
 	   Returns a matrix of those points
-  ====================*/
+ ====================*/
 struct matrix * generate_sphere(double cx, double cy, double cz,
 				double r, double step ) {
   struct matrix * temp = new matrix(4,4);
-  
-  
-  
+  double x,y,z;
+  double a = 0.0;
+  double b = 0.0;
+  for(a; a < M_PI;a+=step){
+    for(b;b<2*M_PI;b+=step){
+      x = r*cos(a)+cx;
+      y = r*sin(a)*cos(b)+cy;
+      z = r*sin(a)*cos(b)+cz;
+      add_points(temp,x,y,z);
+    }
+  }  
   return temp;
 }
 
@@ -266,14 +265,6 @@ void draw_lines( struct matrix * points, screen s, color c) {
 	      points->m[1][point+1],
 	      s, c);	       
 }// end draw_lines
-
-
-
-
-
-
-
-
 
 void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
   
