@@ -93,7 +93,6 @@ void parse_file ( char * filename,
     struct matrix *tmp;
     double r;
     double r2;
-    double height,depth,width;
     double theta;
     char axis;
     int type;
@@ -204,14 +203,26 @@ void parse_file ( char * filename,
     }//end display
     else if(strncmp(line,"clear",strlen(line))==0){
       clear_screen(s);
-      grow_matrix(edges,0);
+      edges->lastcol = 0;
     }
-    else if(strncmp(line,"box",strlen(line))==0){
-      fgets(line,sizeof(line),f);
-       sscanf(line, "%lf %lf %lf %lf %lf",
-	      xvals, yvals, zvals,width,height,depth);
-      clear_screen(s);
-      add_box(edges,xvals[0],yvals[0],zvals[0],width,height,depth);
+    else if ( strncmp(line, "box", strlen(line)) == 0){
+      fgets(line,sizeof(line), f);
+      sscanf(line,"%lf %lf %lf %lf %lf %lf",xvals,yvals,zvals,xvals+1,yvals+1,zvals+1);
+      add_box( edges,xvals[0],yvals[0],zvals[0],xvals[1],yvals[1],zvals[1]);
+    }
+    
+    else if ( strncmp(line, "sphere", strlen(line)) == 0){
+      fgets(line,sizeof(line), f);
+      sscanf(line,"%lf %lf %lf %lf",xvals,yvals,zvals,&r);
+      add_sphere(edges,xvals[0],yvals[0],zvals[0],r,step);
+    }
+
+    else if ( strncmp(line, "torus", strlen(line)) == 0){
+      fgets(line,sizeof(line), f);
+      sscanf(line,"%lf %lf %lf %lf %lf",xvals,yvals,zvals,&r,&r2);
+      add_torus(edges,xvals[0],yvals[0],zvals[0],r,r2,step);
+    }
+ 
       
     else if ( strncmp(line, "save", strlen(line)) == 0 ) {
       fgets(line, sizeof(line), f);
